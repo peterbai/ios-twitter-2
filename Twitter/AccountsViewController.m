@@ -12,9 +12,7 @@
 
 @interface AccountsViewController () <UITableViewDataSource, UITableViewDelegate>
 
-
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-
 
 @end
 
@@ -26,13 +24,13 @@
     // set up tableview
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.tableView.estimatedRowHeight = 100;
+    self.tableView.estimatedRowHeight = 40;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     
     [self.tableView registerNib:[UINib nibWithNibName:@"AccountCell" bundle:nil] forCellReuseIdentifier:@"AccountCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"AccountAddCell" bundle:nil] forCellReuseIdentifier:@"AccountAddCell"];
-    
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+
+    [self.tableView reloadData];
     
     // set up nav bar
         UIBarButtonItem *menuButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"hamburgerMenuButton"] style:UIBarButtonItemStylePlain target:self action:@selector(onMenu)];
@@ -51,15 +49,6 @@
                                       dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"AvenirNext-DemiBold" size:20], NSFontAttributeName,
                                       [UIColor whiteColor], NSForegroundColorAttributeName, nil];
     [self.navigationController.navigationBar setTitleTextAttributes:navBarAttributes];
-    
-    // make nav bar fully transparent
-//    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
-//                                                  forBarMetrics:UIBarMetricsDefault];
-//    self.navigationController.navigationBar.shadowImage = [UIImage new];
-//    self.navigationController.navigationBar.translucent = YES;
-//    self.navigationController.view.backgroundColor = [UIColor clearColor];
-//    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
-
 }
 
 - (void)onMenu {
@@ -70,7 +59,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 //    return self.accounts.count;
-    return 2;
+    return 3;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -79,8 +68,11 @@
         AccountCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"AccountCell"];
         cell.user = [User currentUser];
         return cell;
-    } else {
+    } else if (indexPath.row == [self tableView:self.tableView numberOfRowsInSection:0] - 1) {
         AccountCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"AccountAddCell"];
+        return cell;
+    } else {
+        AccountCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"AccountCell"];
         return cell;
     }
 }

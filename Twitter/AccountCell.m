@@ -24,7 +24,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
-//        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -49,7 +49,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+    self.headerImageView.image = [self.headerImageView.image blurredImageWithRadius:10.0 iterations:20.0 tintColor:nil];
 }
 
 - (void)setUser:(User *)user{
