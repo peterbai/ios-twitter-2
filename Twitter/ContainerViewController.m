@@ -44,7 +44,7 @@
     self.tweetsViewController = [[TweetsViewController alloc] init];
     self.tweetsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.tweetsViewController];
     self.tweetsViewController.delegate = self;
-    self.tweetsViewController.timelineType = TimelineTypeHome;
+    self.tweetsViewController.timelineType = TimelineTypeUser;
     
     self.mentionsTweetsViewController = [[TweetsViewController alloc] init];
     self.mentionsTweetsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.mentionsTweetsViewController];

@@ -88,14 +88,20 @@ ComposeViewControllerDelegate>
                                 [UIColor whiteColor], NSForegroundColorAttributeName, nil];
     
     [self.navigationController.navigationBar setTitleTextAttributes:attributes];
-    
+ 
+    // make nav bar opaque
+    [self.navigationController.navigationBar setBackgroundImage:nil
+                                                  forBarMetrics:UIBarMetricsDefault];
+
     [self getTimelineTweets];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
+    // make nav bar opaque
+    [self.navigationController.navigationBar setBackgroundImage:nil
+                                                  forBarMetrics:UIBarMetricsDefault];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -111,6 +117,8 @@ ComposeViewControllerDelegate>
     [self.tableView addPullToRefreshWithActionHandler:^{
         [self getTimelineTweets];
     }];
+    self.tableView.pullToRefreshView.textColor = [UIColor colorWithWhite:0.8 alpha:1.0];
+    self.tableView.pullToRefreshView.arrowColor = [UIColor colorWithWhite:0.95 alpha:1.0];
 }
 
 #pragma mark Actions
@@ -155,6 +163,7 @@ ComposeViewControllerDelegate>
     tvc.composeViewControllerdelegate = self;
     [self.navigationController pushViewController:tvc animated:YES];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
