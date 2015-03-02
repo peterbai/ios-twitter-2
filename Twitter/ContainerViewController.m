@@ -10,11 +10,13 @@
 #import "TweetsViewController.h"
 #import "MenuViewController.h"
 #import "ProfileViewController.h"
+#import "AccountsViewController.h"
 
 @interface ContainerViewController () <TweetsViewControllerDelegate, MenuViewControllerDelegate, UIGestureRecognizerDelegate, ProfileViewControllerDelegate>
 
 @property (nonatomic, strong) TweetsViewController *tweetsViewController;
 @property (nonatomic, strong) TweetsViewController *mentionsTweetsViewController;
+@property (nonatomic, strong) AccountsViewController *accountsViewController;
 @property (nonatomic, strong) MenuViewController *menuViewController;
 @property (strong, nonatomic) UINavigationController *tweetsNavigationViewController;
 @property (strong, nonatomic) UINavigationController *mentionsTweetsNavigationViewController;
@@ -57,10 +59,10 @@
     self.profileViewController.isCurrentUser = YES;
     self.profileNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.profileViewController];
     
+    self.accountsViewController = [[AccountsViewController alloc] init];
+    
     [self displayViewController:self.menuViewController];
     [self displayViewController:self.tweetsNavigationViewController];
-    self.activeViewController = self.tweetsNavigationViewController;
-//    [self displayViewController:self.profileNavigationViewController];
     
     self.panGestureRecognizer.delegate = self;
     self.menuDisplayed = NO;
