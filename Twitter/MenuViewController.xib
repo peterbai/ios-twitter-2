@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MenuViewController">
@@ -15,6 +16,17 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="color-bg" translatesAutoresizingMaskIntoConstraints="NO" id="XXg-JZ-esc">
+                    <rect key="frame" x="0.0" y="0.0" width="640" height="568"/>
+                </imageView>
+                <visualEffectView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QPg-nT-ih0">
+                    <rect key="frame" x="0.0" y="0.0" width="640" height="568"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="uGi-ej-ZNY">
+                        <rect key="frame" x="0.0" y="0.0" width="640" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <blurEffect style="dark"/>
+                </visualEffectView>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="fky-q0-azz">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -23,14 +35,25 @@
             </subviews>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
+                <constraint firstItem="QPg-nT-ih0" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="AGv-1I-wVL"/>
+                <constraint firstItem="fky-q0-azz" firstAttribute="width" secondItem="XXg-JZ-esc" secondAttribute="width" multiplier="0.5" id="Stv-m9-fYw"/>
                 <constraint firstItem="fky-q0-azz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Uzd-vh-ml2"/>
                 <constraint firstItem="fky-q0-azz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Xpf-4Q-f1K"/>
                 <constraint firstAttribute="bottom" secondItem="fky-q0-azz" secondAttribute="bottom" id="g20-Rk-ZIi"/>
+                <constraint firstAttribute="bottom" secondItem="QPg-nT-ih0" secondAttribute="bottom" id="hSb-QW-bx9"/>
+                <constraint firstAttribute="bottom" secondItem="XXg-JZ-esc" secondAttribute="bottom" id="iPt-vJ-Nqx"/>
+                <constraint firstItem="XXg-JZ-esc" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="jpD-0E-QDi"/>
+                <constraint firstItem="XXg-JZ-esc" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="jpJ-UF-WlK"/>
+                <constraint firstItem="QPg-nT-ih0" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ptq-na-uHZ"/>
                 <constraint firstAttribute="trailing" secondItem="fky-q0-azz" secondAttribute="trailing" id="siK-NG-NrI"/>
+                <constraint firstItem="QPg-nT-ih0" firstAttribute="width" secondItem="XXg-JZ-esc" secondAttribute="width" id="yUj-rg-nc2"/>
             </constraints>
             <point key="canvasLocation" x="-85" y="166"/>
         </view>
     </objects>
+    <resources>
+        <image name="color-bg" width="512" height="384"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

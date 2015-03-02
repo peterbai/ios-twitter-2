@@ -28,6 +28,10 @@
     self.navigationController.navigationBar.hidden = NO;
     self.title = @"Tweet";
     
+    // make nav bar opaque
+    [self.navigationController.navigationBar setBackgroundImage:nil
+                                                  forBarMetrics:UIBarMetricsDefault];
+    
     // Set up tableview
     self.tableView.delegate = self;
     self.tableView.dataSource = self;

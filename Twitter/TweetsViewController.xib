@@ -27,7 +27,7 @@
                 <constraint firstAttribute="bottom" secondItem="Vgw-gF-JHt" secondAttribute="bottom" id="vmz-8V-e9b"/>
                 <constraint firstItem="Vgw-gF-JHt" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="yOi-SX-Ira"/>
             </constraints>
-            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+            <nil key="simulatedTopBarMetrics"/>
             <point key="canvasLocation" x="163" y="301"/>
         </view>
     </objects>

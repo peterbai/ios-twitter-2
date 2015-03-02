@@ -156,6 +156,7 @@ ComposeViewControllerDelegate>
                                 [UIColor whiteColor], NSForegroundColorAttributeName, nil];
     [self.navigationController.navigationBar setTitleTextAttributes:navBarAttributes];
     
+    // make nav bar fully transparent
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
                                                   forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
@@ -171,6 +172,15 @@ ComposeViewControllerDelegate>
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
+
+    // make nav bar fully transparent
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
+                                                  forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = [UIImage new];
+    self.navigationController.navigationBar.translucent = YES;
+    self.navigationController.view.backgroundColor = [UIColor clearColor];
+    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
+
 }
 
 - (void)viewDidLayoutSubviews {
@@ -276,7 +286,7 @@ ComposeViewControllerDelegate>
     }
     
     CGFloat offset = scrollView.contentOffset.y;
-    NSLog(@"offset y: %f", offset);
+//    NSLog(@"offset y: %f", offset);
     
 //    CGPoint detailsViewOriginInWindow = [self.view convertPoint:self.detailsView.frame.origin toView:nil];
     
@@ -419,6 +429,24 @@ ComposeViewControllerDelegate>
         NSLog(@"retweeted successfully with response: %@", responseObject);
         timelineTweetCell.tweet.myNewRetweetedTweet = [[Tweet alloc] initWithDictionary:responseObject];
     }];
+}
+
+- (void)profileImageTappedFromTimelineTweetCell:(TimelineTweetCell *)timelineTweetCell {
+    
+    if ([timelineTweetCell.tweet.user.userID isEqualToNumber:self.user.userID]){
+        NSLog(@"tapping current user, returning.");
+        return;
+    }
+    
+    ProfileViewController *profileViewController = [[ProfileViewController alloc] init];
+    
+    if (timelineTweetCell.tweet.retweetedTweet) {
+        profileViewController.user = timelineTweetCell.tweet.retweetedTweet.user;
+    } else {
+        profileViewController.user = timelineTweetCell.tweet.user;
+    }
+    
+    [self.navigationController pushViewController:profileViewController animated:YES];
 }
 
 - (void)removeRetweetInvokedFromTimelineTweetCell:(TimelineTweetCell *)timelineTweetCell {
@@ -649,7 +677,6 @@ ComposeViewControllerDelegate>
     }];
 
     NSURLRequest *imageRequestBanner = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:self.user.profileBannerUrlMedium]];
-    NSLog(@"getting image url:%@", self.user.profileBannerUrlMedium);
     [self.headerImageView setImageWithURLRequest:imageRequestBanner placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
         [UIView transitionWithView:self.headerImageView
                           duration:0.3

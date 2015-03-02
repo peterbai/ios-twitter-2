@@ -10,11 +10,13 @@
 #import "TweetsViewController.h"
 #import "MenuViewController.h"
 #import "ProfileViewController.h"
+#import "AccountsViewController.h"
 
 @interface ContainerViewController () <TweetsViewControllerDelegate, MenuViewControllerDelegate, UIGestureRecognizerDelegate, ProfileViewControllerDelegate>
 
 @property (nonatomic, strong) TweetsViewController *tweetsViewController;
 @property (nonatomic, strong) TweetsViewController *mentionsTweetsViewController;
+@property (nonatomic, strong) AccountsViewController *accountsViewController;
 @property (nonatomic, strong) MenuViewController *menuViewController;
 @property (strong, nonatomic) UINavigationController *tweetsNavigationViewController;
 @property (strong, nonatomic) UINavigationController *mentionsTweetsNavigationViewController;
@@ -44,7 +46,7 @@
     self.tweetsViewController = [[TweetsViewController alloc] init];
     self.tweetsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.tweetsViewController];
     self.tweetsViewController.delegate = self;
-    self.tweetsViewController.timelineType = TimelineTypeHome;
+    self.tweetsViewController.timelineType = TimelineTypeUser;
     
     self.mentionsTweetsViewController = [[TweetsViewController alloc] init];
     self.mentionsTweetsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.mentionsTweetsViewController];
@@ -57,16 +59,13 @@
     self.profileViewController.isCurrentUser = YES;
     self.profileNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.profileViewController];
     
+    self.accountsViewController = [[AccountsViewController alloc] init];
+    
     [self displayViewController:self.menuViewController];
     [self displayViewController:self.tweetsNavigationViewController];
-    self.activeViewController = self.tweetsNavigationViewController;
-//    [self displayViewController:self.profileNavigationViewController];
     
-    NSLog(@"active vc on load: %@", self.activeViewController);
     self.panGestureRecognizer.delegate = self;
     self.menuDisplayed = NO;
-    
-    NSLog(@"tweets: %@, mentions: %@", self.tweetsNavigationViewController, self.mentionsTweetsNavigationViewController);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -89,75 +88,41 @@
 
 - (IBAction)onPanGesture:(UIPanGestureRecognizer *)sender {
     CGPoint translation = [sender translationInView:sender.view];
+    CGPoint velocity = [sender velocityInView:sender.view];
     CGFloat fraction = (translation.x / 200.0);
     fraction = fminf(fmaxf(fraction, 0.0), 1.0);
+
     
-    CGRect initialMainViewFrame = self.contentView.frame;
-    CGRect initialMenuViewFrame = CGRectOffset(self.contentView.frame, -100, 0);
-    CGRect finalMainViewFrame = CGRectInset(initialMainViewFrame,
-                                            initialMainViewFrame.size.width / 4,
-                                            initialMainViewFrame.size.height / 4);
-    CGPoint initialCenter = CGPointMake(self.contentView.center.x, self.contentView.center.y);
-    CGPoint finalCenter = CGPointMake(self.contentView.frame.size.width + initialMainViewFrame.size.width / 16,
-                                      self.contentView.frame.size.height / 2);
     if (!self.menuDisplayed) {
         switch (sender.state) {
             case UIGestureRecognizerStateBegan:
             {
-                NSLog(@"starting gesture to show menu");
-                self.menuViewController.view.frame = initialMenuViewFrame;
-                self.intermediateView = [self.activeViewController.view snapshotViewAfterScreenUpdates:NO];
-                self.intermediateView.frame = initialMainViewFrame;
-                
-                [self.contentView addSubview:self.intermediateView];
-                [self hideViewController:self.activeViewController];
+//                NSLog(@"starting gesture to show menu");
+                // set up menu transform states
+                CGAffineTransform initialMenuTransform = CGAffineTransformIdentity;
+                initialMenuTransform = CGAffineTransformTranslate(initialMenuTransform, -100, 0);
+
+                // set initial state
+                self.menuViewController.view.transform = initialMenuTransform;
                 break;
             }
             case UIGestureRecognizerStateChanged:
             {
-                NSLog(@"pan gesture translation: %f, %f", translation.x, translation.y);
-                CGFloat intermediateCenterX = ((1 - fraction) * initialCenter.x) + (fraction * finalCenter.x);
-                CGFloat intermediateCenterY = ((1 - fraction) * initialCenter.y) + (fraction * finalCenter.y);
-                CGFloat intermediateWidth = ((1 - fraction) * initialMainViewFrame.size.width) + (fraction * finalMainViewFrame.size.width);
-                CGFloat intermediateHeight = ((1 - fraction) * initialMainViewFrame.size.height) + (fraction * finalMainViewFrame.size.height);
-                CGFloat intermediateMenuPositionX = ((1 - fraction) * initialMenuViewFrame.origin.x + fraction * initialMainViewFrame.origin.x);
-                
-                self.intermediateView.frame = CGRectMake(0, 0, intermediateWidth, intermediateHeight);
-                self.intermediateView.center = CGPointMake(intermediateCenterX, intermediateCenterY);
-                self.menuViewController.view.frame = CGRectMake(intermediateMenuPositionX, 0, self.contentView.frame.size.width, self.contentView.frame.size.height);
+//                NSLog(@"pan gesture translation: %f, %f", translation.x, translation.y);
+                [self menuAnimationFraction:fraction WithActiveViewController:self.activeViewController];
                 break;
             }
             case UIGestureRecognizerStateEnded:
             case UIGestureRecognizerStateCancelled:
             {
-                NSLog(@"gesture ended or cancelled");
-                if (fraction > 0.5) {
-                    NSLog(@"completing with menu show transition");
-                    [UIView animateWithDuration:0.3
-                                          delay:0.0
-                                        options:UIViewAnimationOptionCurveEaseInOut
-                                     animations:^{
-                                         self.intermediateView.frame = finalMainViewFrame;
-                                         self.intermediateView.center = finalCenter;
-                                         self.menuViewController.view.frame = initialMainViewFrame;
-                                     } completion:^(BOOL finished) {
-                                         self.menuDisplayed = YES;
-                                     }];
+//                NSLog(@"gesture ended or cancelled");
+                if (fraction > 0.5 || velocity.x > 200) {
+//                    NSLog(@"completing with menu show transition");
+                    [self showMenuFromCurrentState:YES];
                 }
                 else {
-                    NSLog(@"completing with menu hide transition");
-                    CGRect finalMainViewFrame = self.contentView.frame;
-                    [UIView animateWithDuration:0.3
-                                          delay:0.0
-                                        options:UIViewAnimationOptionCurveEaseInOut
-                                     animations:^{
-                                         self.intermediateView.frame = finalMainViewFrame;
-                                     } completion:^(BOOL finished) {
-                                         [self.intermediateView removeFromSuperview];
-                                         self.intermediateView = nil;
-                                         [self displayViewController:self.activeViewController];
-                                         self.menuDisplayed = NO;
-                                     }];
+//                    NSLog(@"completing with menu hide transition");
+                    [self hideMenu];
                 }
                 break;
             }
@@ -166,57 +131,32 @@
         }
     }
     else {
-        CGFloat fraction = -(translation.x / 200.0);
+        CGFloat fraction = 1 / (1 - (translation.x / 200.0));
         fraction = fminf(fmaxf(fraction, 0.0), 1.0);
 
         switch (sender.state) {
             case UIGestureRecognizerStateBegan:
             {
-                NSLog(@"starting gesture to hide menu");
+//                NSLog(@"starting gesture to hide menu");
                 break;
             }
             case UIGestureRecognizerStateChanged:
             {
-                NSLog(@"pan gesture translation: %f, %f", translation.x, translation.y);
-                CGFloat intermediateCenterX = ((1 - fraction) * finalCenter.x) + (fraction * initialCenter.x);
-                CGFloat intermediateCenterY = ((1 - fraction) * finalCenter.y) + (fraction * initialCenter.y);
-                CGFloat intermediateWidth = ((1 - fraction) * finalMainViewFrame.size.width) + (fraction * initialMainViewFrame.size.width);
-                CGFloat intermediateHeight = ((1 - fraction) * finalMainViewFrame.size.height) + (fraction * initialMainViewFrame.size.height);
-                
-                self.intermediateView.frame = CGRectMake(0, 0, intermediateWidth, intermediateHeight);
-                self.intermediateView.center = CGPointMake(intermediateCenterX, intermediateCenterY);
+//                NSLog(@"pan gesture translation: %f, %f", translation.x, translation.y);
+                [self menuAnimationFraction:fraction WithActiveViewController:self.activeViewController];
                 break;
             }
             case UIGestureRecognizerStateEnded:
             case UIGestureRecognizerStateCancelled:
             {
-                NSLog(@"gesture ended or cancelled");
-                if (fraction > 0.5) {
-                    NSLog(@"completing with menu hide transition");
-                    CGRect finalMainViewFrame = self.contentView.frame;
-                    [UIView animateWithDuration:0.3
-                                          delay:0.0
-                                        options:UIViewAnimationOptionCurveEaseInOut
-                                     animations:^{
-                                         self.intermediateView.frame = finalMainViewFrame;
-                                     } completion:^(BOOL finished) {
-                                         [self.intermediateView removeFromSuperview];
-                                         self.intermediateView = nil;
-                                         [self displayViewController:self.activeViewController];
-                                         self.menuDisplayed = NO;
-                                     }];
+//                NSLog(@"gesture ended or cancelled");
+                if (fraction < 0.5 || velocity.x < 200) {
+//                    NSLog(@"completing with menu hide transition");
+                    [self hideMenu];
                 }
                 else {
-                    NSLog(@"completing with menu show transition");
-                    [UIView animateWithDuration:0.3
-                                          delay:0.0
-                                        options:UIViewAnimationOptionCurveEaseInOut
-                                     animations:^{
-                                         self.intermediateView.frame = finalMainViewFrame;
-                                         self.intermediateView.center = finalCenter;
-                                     } completion:^(BOOL finished) {
-                                         self.menuDisplayed = YES;
-                                     }];
+//                    NSLog(@"completing with menu show transition");
+                    [self showMenuFromCurrentState:YES];
                 }
                 break;
             }
@@ -267,7 +207,12 @@
 
 #pragma mark Private methods
 
+
 - (void)showMenu {
+    [self showMenuFromCurrentState:NO];
+}
+
+- (void)showMenuFromCurrentState:(BOOL)fromCurrentState {
     // set up active viewcontroller transform states
     CGAffineTransform initialTransform = CGAffineTransformIdentity;
     CGAffineTransform finalTransform = CGAffineTransformTranslate(initialTransform, self.view.bounds.size.width / 2.0 + self.view.bounds.size.width / 16 , 0);
@@ -277,9 +222,11 @@
     CGAffineTransform initialMenuTransform = CGAffineTransformIdentity;
     initialMenuTransform = CGAffineTransformTranslate(initialMenuTransform, -100, 0);
     CGAffineTransform finalMenuTransform = CGAffineTransformIdentity;
-    
-    // set initial state
-    self.menuViewController.view.transform = initialMenuTransform;
+
+    if (!fromCurrentState) {
+        // set initial state
+        self.menuViewController.view.transform = initialMenuTransform;
+    }
     
     // animate to final state
     [UIView animateWithDuration:0.3
@@ -293,6 +240,26 @@
                      }];
 }
 
+- (void)menuAnimationFraction:(CGFloat)fraction WithActiveViewController:(UIViewController *)activeViewController {
+
+//    NSLog(@"Fraction: %f", fraction);
+    // create intermediate transforms
+    CGFloat intermediateViewTranslateX = fraction * (self.view.bounds.size.width / 2.0 + self.view.bounds.size.width / 16);
+    CGFloat intermediateViewScale = fraction * 0.5 + (1 - fraction) * 1.0;
+    CGFloat intermediateMenuTranslateX = fraction * 0 + (1 - fraction) * -100;
+
+    CGAffineTransform intermediateViewTransform = CGAffineTransformIdentity;
+    intermediateViewTransform = CGAffineTransformTranslate(intermediateViewTransform, intermediateViewTranslateX , 0);
+    intermediateViewTransform = CGAffineTransformScale(intermediateViewTransform, intermediateViewScale, intermediateViewScale);
+    
+    CGAffineTransform intermediateMenuTransform = CGAffineTransformIdentity;
+    intermediateMenuTransform = CGAffineTransformTranslate(intermediateMenuTransform, intermediateMenuTranslateX, 0);
+    
+    // apply transforms
+    activeViewController.view.transform = intermediateViewTransform;
+    self.menuViewController.view.transform = intermediateMenuTransform;
+}
+
 - (void)hideMenu {
     [self goToViewController:nil];
 }
@@ -303,17 +270,23 @@
 
 - (void)goToViewController:(UIViewController *)viewController {
     
-    NSLog(@"going to vc: %@ from active vc: %@", viewController, self.activeViewController);
-    NSLog(@"from and to are equal? %d", (viewController == self.activeViewController));
+//    NSLog(@"going to vc: %@ from active vc: %@", viewController, self.activeViewController);
+//    NSLog(@"from and to are equal? %d", (viewController == self.activeViewController));
 
     // Going to same view controller - just expand the existing intermediate view
     if (!viewController || viewController == self.activeViewController) {
         NSLog(@"going back to currently active vc");
+        
+        // set up menu transform states
+        CGAffineTransform initialMenuTransform = CGAffineTransformIdentity;
+        initialMenuTransform = CGAffineTransformTranslate(initialMenuTransform, -100, 0);
+        
         [UIView animateWithDuration:0.3
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              self.activeViewController.view.transform = CGAffineTransformIdentity;
+                             self.menuViewController.view.transform = initialMenuTransform;
                          } completion:^(BOOL finished) {
                              self.menuDisplayed = NO;
                          }];
@@ -334,6 +307,9 @@
         viewController.view.transform = initialTransform;
         viewController.view.alpha = 0;
 
+        CGAffineTransform initialMenuTransform = CGAffineTransformIdentity;
+        initialMenuTransform = CGAffineTransformTranslate(initialMenuTransform, -100, 0);
+        
         // animate with keyframes
         [UIView animateKeyframesWithDuration:0.5
                                        delay:0.0
@@ -350,6 +326,7 @@
                                       [UIView addKeyframeWithRelativeStartTime:0.5
                                                               relativeDuration:0.5
                                                                     animations:^{
+                                                                        self.menuViewController.view.transform = initialMenuTransform;
                                                                         viewController.view.transform = finalTransform;
                                                                     }];
                                   } completion:^(BOOL finished) {
