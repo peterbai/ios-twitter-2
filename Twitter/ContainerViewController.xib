@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ContainerViewController">
+            <connections>
+                <outlet property="contentView" destination="lJf-vs-j7S" id="9f2-qg-MfL"/>
+                <outlet property="panGestureRecognizer" destination="Jsl-ZQ-WUh" id="Lg5-Gb-3zC"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lJf-vs-j7S" userLabel="contentView">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <gestureRecognizers/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="Jsl-ZQ-WUh" appends="YES" id="f3w-9i-LoB"/>
+                    </connections>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="lJf-vs-j7S" secondAttribute="trailing" id="OyU-8M-fgp"/>
+                <constraint firstAttribute="bottom" secondItem="lJf-vs-j7S" secondAttribute="bottom" id="dUl-Ax-cBS"/>
+                <constraint firstItem="lJf-vs-j7S" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ppg-2q-sys"/>
+                <constraint firstItem="lJf-vs-j7S" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="zTd-Ig-Isf"/>
+            </constraints>
+            <point key="canvasLocation" x="140" y="154"/>
+        </view>
+        <panGestureRecognizer minimumNumberOfTouches="1" id="Jsl-ZQ-WUh">
+            <connections>
+                <action selector="onPanGesture:" destination="-1" id="pAI-P1-cfa"/>
+            </connections>
+        </panGestureRecognizer>
+    </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
