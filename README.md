@@ -2,7 +2,7 @@
 
 This is an enhanced version of the basic twitter app.
 
-Time spent: `hours total`
+Time spent: `22 hours`
 
 ### Features
 
