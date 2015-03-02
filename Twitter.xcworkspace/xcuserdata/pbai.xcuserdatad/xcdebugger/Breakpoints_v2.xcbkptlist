@@ -20,12 +20,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Twitter/ContainerViewController.m"
-            timestampString = "446968096.569488"
+            timestampString = "446975565.999701"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "281"
-            endingLineNumber = "281"
-            landmarkName = "-showMenu"
+            startingLineNumber = "226"
+            endingLineNumber = "226"
+            landmarkName = "-onPanGesture:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
