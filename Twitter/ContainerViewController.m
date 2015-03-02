@@ -91,40 +91,21 @@
     CGPoint translation = [sender translationInView:sender.view];
     CGFloat fraction = (translation.x / 200.0);
     fraction = fminf(fmaxf(fraction, 0.0), 1.0);
+
     
-    CGRect initialMainViewFrame = self.contentView.frame;
-    CGRect initialMenuViewFrame = CGRectOffset(self.contentView.frame, -100, 0);
-    CGRect finalMainViewFrame = CGRectInset(initialMainViewFrame,
-                                            initialMainViewFrame.size.width / 4,
-                                            initialMainViewFrame.size.height / 4);
-    CGPoint initialCenter = CGPointMake(self.contentView.center.x, self.contentView.center.y);
-    CGPoint finalCenter = CGPointMake(self.contentView.frame.size.width + initialMainViewFrame.size.width / 16,
-                                      self.contentView.frame.size.height / 2);
     if (!self.menuDisplayed) {
         switch (sender.state) {
             case UIGestureRecognizerStateBegan:
             {
                 NSLog(@"starting gesture to show menu");
-                self.menuViewController.view.frame = initialMenuViewFrame;
-                self.intermediateView = [self.activeViewController.view snapshotViewAfterScreenUpdates:NO];
-                self.intermediateView.frame = initialMainViewFrame;
-                
-                [self.contentView addSubview:self.intermediateView];
-                [self hideViewController:self.activeViewController];
+
                 break;
             }
             case UIGestureRecognizerStateChanged:
             {
                 NSLog(@"pan gesture translation: %f, %f", translation.x, translation.y);
-                CGFloat intermediateCenterX = ((1 - fraction) * initialCenter.x) + (fraction * finalCenter.x);
-                CGFloat intermediateCenterY = ((1 - fraction) * initialCenter.y) + (fraction * finalCenter.y);
-                CGFloat intermediateWidth = ((1 - fraction) * initialMainViewFrame.size.width) + (fraction * finalMainViewFrame.size.width);
-                CGFloat intermediateHeight = ((1 - fraction) * initialMainViewFrame.size.height) + (fraction * finalMainViewFrame.size.height);
-                CGFloat intermediateMenuPositionX = ((1 - fraction) * initialMenuViewFrame.origin.x + fraction * initialMainViewFrame.origin.x);
-                
-                self.intermediateView.frame = CGRectMake(0, 0, intermediateWidth, intermediateHeight);
-                self.intermediateView.center = CGPointMake(intermediateCenterX, intermediateCenterY);
-                self.menuViewController.view.frame = CGRectMake(intermediateMenuPositionX, 0, self.contentView.frame.size.width, self.contentView.frame.size.height);
+
+                [self menuAnimationFraction:fraction WithActiveViewController:self.activeViewController];
                 break;
             }
             case UIGestureRecognizerStateEnded:
@@ -133,31 +114,11 @@
                 NSLog(@"gesture ended or cancelled");
                 if (fraction > 0.5) {
                     NSLog(@"completing with menu show transition");
-                    [UIView animateWithDuration:0.3
-                                          delay:0.0
-                                        options:UIViewAnimationOptionCurveEaseInOut
-                                     animations:^{
-                                         self.intermediateView.frame = finalMainViewFrame;
-                                         self.intermediateView.center = finalCenter;
-                                         self.menuViewController.view.frame = initialMainViewFrame;
-                                     } completion:^(BOOL finished) {
-                                         self.menuDisplayed = YES;
-                                     }];
+
                 }
                 else {
                     NSLog(@"completing with menu hide transition");
-                    CGRect finalMainViewFrame = self.contentView.frame;
-                    [UIView animateWithDuration:0.3
-                                          delay:0.0
-                                        options:UIViewAnimationOptionCurveEaseInOut
-                                     animations:^{
-                                         self.intermediateView.frame = finalMainViewFrame;
-                                     } completion:^(BOOL finished) {
-                                         [self.intermediateView removeFromSuperview];
-                                         self.intermediateView = nil;
-                                         [self displayViewController:self.activeViewController];
-                                         self.menuDisplayed = NO;
-                                     }];
+
                 }
                 break;
             }
@@ -178,13 +139,7 @@
             case UIGestureRecognizerStateChanged:
             {
                 NSLog(@"pan gesture translation: %f, %f", translation.x, translation.y);
-                CGFloat intermediateCenterX = ((1 - fraction) * finalCenter.x) + (fraction * initialCenter.x);
-                CGFloat intermediateCenterY = ((1 - fraction) * finalCenter.y) + (fraction * initialCenter.y);
-                CGFloat intermediateWidth = ((1 - fraction) * finalMainViewFrame.size.width) + (fraction * initialMainViewFrame.size.width);
-                CGFloat intermediateHeight = ((1 - fraction) * finalMainViewFrame.size.height) + (fraction * initialMainViewFrame.size.height);
-                
-                self.intermediateView.frame = CGRectMake(0, 0, intermediateWidth, intermediateHeight);
-                self.intermediateView.center = CGPointMake(intermediateCenterX, intermediateCenterY);
+
                 break;
             }
             case UIGestureRecognizerStateEnded:
@@ -193,30 +148,11 @@
                 NSLog(@"gesture ended or cancelled");
                 if (fraction > 0.5) {
                     NSLog(@"completing with menu hide transition");
-                    CGRect finalMainViewFrame = self.contentView.frame;
-                    [UIView animateWithDuration:0.3
-                                          delay:0.0
-                                        options:UIViewAnimationOptionCurveEaseInOut
-                                     animations:^{
-                                         self.intermediateView.frame = finalMainViewFrame;
-                                     } completion:^(BOOL finished) {
-                                         [self.intermediateView removeFromSuperview];
-                                         self.intermediateView = nil;
-                                         [self displayViewController:self.activeViewController];
-                                         self.menuDisplayed = NO;
-                                     }];
+
                 }
                 else {
                     NSLog(@"completing with menu show transition");
-                    [UIView animateWithDuration:0.3
-                                          delay:0.0
-                                        options:UIViewAnimationOptionCurveEaseInOut
-                                     animations:^{
-                                         self.intermediateView.frame = finalMainViewFrame;
-                                         self.intermediateView.center = finalCenter;
-                                     } completion:^(BOOL finished) {
-                                         self.menuDisplayed = YES;
-                                     }];
+
                 }
                 break;
             }
@@ -291,6 +227,26 @@
                      } completion:^(BOOL finished) {
                          self.menuDisplayed = YES;
                      }];
+}
+
+- (void)menuAnimationFraction:(CGFloat)fraction WithActiveViewController:(UIViewController *)activeViewController {
+
+    NSLog(@"Fraction: %f", fraction);
+    // create intermediate transforms
+    CGFloat intermediateViewTranslateX = fraction * (self.view.bounds.size.width / 2.0 + self.view.bounds.size.width / 16);
+    CGFloat intermediateViewScale = fraction * 0.5 + (1 - fraction) * 1.0;
+    CGFloat intermediateMenuTranslateX = fraction * 0 + (1 - fraction) * -100;
+
+    CGAffineTransform intermediateViewTransform = CGAffineTransformIdentity;
+    intermediateViewTransform = CGAffineTransformTranslate(intermediateViewTransform, intermediateViewTranslateX , 0);
+    intermediateViewTransform = CGAffineTransformScale(intermediateViewTransform, intermediateViewScale, intermediateViewScale);
+    
+    CGAffineTransform intermediateMenuTransform = CGAffineTransformIdentity;
+    intermediateMenuTransform = CGAffineTransformTranslate(intermediateMenuTransform, intermediateMenuTranslateX, 0);
+    
+    // apply transforms
+    activeViewController.view.transform = intermediateViewTransform;
+    self.menuViewController.view.transform = intermediateMenuTransform;
 }
 
 - (void)hideMenu {
