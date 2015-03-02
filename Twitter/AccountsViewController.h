@@ -19,5 +19,6 @@
 @interface AccountsViewController : UIViewController
 
 @property (weak, nonatomic) id<AccountsViewControllerDelegate> delegate;
+@property (strong, nonatomic) NSArray *accounts;
 
 @end
