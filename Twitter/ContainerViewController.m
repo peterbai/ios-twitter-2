@@ -61,9 +61,10 @@
     self.profileNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.profileViewController];
     
     self.accountsViewController = [[AccountsViewController alloc] init];
-    self.accountsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.accountsNavigationViewController];
+    self.accountsViewController.delegate = self;
+    self.accountsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.accountsViewController];
     
-//    [self displayViewController:self.menuViewController];
+    [self displayViewController:self.menuViewController];
 //    [self displayViewController:self.tweetsNavigationViewController];
     [self displayViewController:self.accountsNavigationViewController];
     
@@ -188,6 +189,9 @@
     }
     else if ([name isEqualToString:@"Mentions"]) {
         [self goToViewController:self.mentionsTweetsNavigationViewController];
+    }
+    else if ([name isEqualToString:@"Accounts"]) {
+        [self goToViewController:self.accountsNavigationViewController];
     }
 }
 

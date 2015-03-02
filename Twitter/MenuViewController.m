@@ -98,6 +98,9 @@ typedef NS_ENUM(NSInteger, MenuOption) {
         case MenuOptionMentions:
             [self.delegate menuViewController:self didSelectMenuWithName:@"Mentions"];
             break;
+        case MenuOptionAccounts:
+            [self.delegate menuViewController:self didSelectMenuWithName:@"Accounts"];
+            break;
         default:
             break;
     }
