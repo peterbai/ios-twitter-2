@@ -25,16 +25,14 @@ Time spent: `hours total`
 	- [x] As the paging view moves, increase the opacity of the background screen. See the actual Twitter app for this effect
 	- [x] Pulling down the profile page should blur and resize the header image.
 
-- [ ] Account switching
-	- [ ] Long press on tab bar to bring up Account view with animation
+- [x] Account switching (basic layout)
 	- [ ] Tap account to switch to
-	- [ ] Include a plus button to Add an Account
+	- [x] Include a plus button to Add an Account
 	- [ ] Swipe to delete an account
 
 ### Walkthrough
-<!--
-![Video Walkthrough](./gif/walkthrough-04.gif)
--->
+
+![Video Walkthrough](./gif/walkthrough-t2-03.gif)
 
 Credits
 ---------
@@ -42,3 +40,4 @@ Credits
 * [AFNetworking](https://github.com/AFNetworking/AFNetworking)
 * [SVPullToRefresh](https://github.com/samvermette/SVPullToRefresh)
 * [DateTools](https://github.com/MatthewYork/DateTools)
+* [FXBlurView](https://github.com/nicklockwood/FXBlurView)
