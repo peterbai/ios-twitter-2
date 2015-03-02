@@ -8,6 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@class AccountsViewController;
+
+@protocol AccountsViewControllerDelegate <NSObject>
+
+- (void)menuButtonTappedByAccountsViewController:(AccountsViewController *)accountsViewController;
+
+@end
+
 @interface AccountsViewController : UIViewController
+
+@property (weak, nonatomic) id<AccountsViewControllerDelegate> delegate;
 
 @end

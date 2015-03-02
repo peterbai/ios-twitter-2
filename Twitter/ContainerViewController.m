@@ -12,7 +12,7 @@
 #import "ProfileViewController.h"
 #import "AccountsViewController.h"
 
-@interface ContainerViewController () <TweetsViewControllerDelegate, MenuViewControllerDelegate, UIGestureRecognizerDelegate, ProfileViewControllerDelegate>
+@interface ContainerViewController () <TweetsViewControllerDelegate, MenuViewControllerDelegate, UIGestureRecognizerDelegate, ProfileViewControllerDelegate, AccountsViewControllerDelegate>
 
 @property (nonatomic, strong) TweetsViewController *tweetsViewController;
 @property (nonatomic, strong) TweetsViewController *mentionsTweetsViewController;
@@ -21,6 +21,7 @@
 @property (strong, nonatomic) UINavigationController *tweetsNavigationViewController;
 @property (strong, nonatomic) UINavigationController *mentionsTweetsNavigationViewController;
 @property (strong, nonatomic) UINavigationController *profileNavigationViewController;
+@property (strong, nonatomic) UINavigationController *accountsNavigationViewController;
 @property (strong, nonatomic) ProfileViewController *profileViewController;
 @property (strong, nonatomic) UIView *intermediateView;
 @property (nonatomic) BOOL menuDisplayed;
@@ -60,9 +61,11 @@
     self.profileNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.profileViewController];
     
     self.accountsViewController = [[AccountsViewController alloc] init];
+    self.accountsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.accountsNavigationViewController];
     
-    [self displayViewController:self.menuViewController];
-    [self displayViewController:self.tweetsNavigationViewController];
+//    [self displayViewController:self.menuViewController];
+//    [self displayViewController:self.tweetsNavigationViewController];
+    [self displayViewController:self.accountsNavigationViewController];
     
     self.panGestureRecognizer.delegate = self;
     self.menuDisplayed = NO;
@@ -191,6 +194,12 @@
 #pragma mark ProfileViewControllerDelegate methods
 
 - (void)menuButtonTappedByProfileViewController:(ProfileViewController *)profileViewController {
+    [self showMenu];
+}
+
+#pragma mark AccountsViewControllerDelegate methods
+
+- (void)menuButtonTappedByAccountsViewController:(AccountsViewController *)accountsViewController {
     [self showMenu];
 }
 

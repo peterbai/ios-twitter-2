@@ -186,6 +186,7 @@
 		2B2493E71A944B7B00D0E771 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				2B441DCC1AA44FDB005C122C /* Account */,
 				2B0BA2B01AA24A5F002F8555 /* Profile */,
 				2B3D0E2D1AA15AB8000DD953 /* Menu */,
 				2B16DC3D1A9AA0470005BBE5 /* Timeline */,
@@ -202,6 +203,13 @@
 				2B3D0E301AA15AD3000DD953 /* MenuOptionCell.xib */,
 			);
 			name = Menu;
+			sourceTree = "<group>";
+		};
+		2B441DCC1AA44FDB005C122C /* Account */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Account;
 			sourceTree = "<group>";
 		};
 		2B44CF941A92ED4900CB58B5 /* Models */ = {

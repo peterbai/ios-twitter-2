@@ -16,7 +16,7 @@
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Acj-qb-pLm">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="0.95686280729999995" green="0.97254908080000002" blue="0.98039221759999995" alpha="1" colorSpace="deviceRGB"/>
                 </tableView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -26,6 +26,7 @@
                 <constraint firstItem="Acj-qb-pLm" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="X9K-Gs-2vc"/>
                 <constraint firstAttribute="bottom" secondItem="Acj-qb-pLm" secondAttribute="bottom" id="mbS-Gm-rfU"/>
             </constraints>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <point key="canvasLocation" x="140" y="154"/>
         </view>
     </objects>
