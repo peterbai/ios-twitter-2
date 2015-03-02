@@ -97,7 +97,7 @@
         switch (sender.state) {
             case UIGestureRecognizerStateBegan:
             {
-                NSLog(@"starting gesture to show menu");
+//                NSLog(@"starting gesture to show menu");
                 // set up menu transform states
                 CGAffineTransform initialMenuTransform = CGAffineTransformIdentity;
                 initialMenuTransform = CGAffineTransformTranslate(initialMenuTransform, -100, 0);
@@ -108,20 +108,20 @@
             }
             case UIGestureRecognizerStateChanged:
             {
-                NSLog(@"pan gesture translation: %f, %f", translation.x, translation.y);
+//                NSLog(@"pan gesture translation: %f, %f", translation.x, translation.y);
                 [self menuAnimationFraction:fraction WithActiveViewController:self.activeViewController];
                 break;
             }
             case UIGestureRecognizerStateEnded:
             case UIGestureRecognizerStateCancelled:
             {
-                NSLog(@"gesture ended or cancelled");
+//                NSLog(@"gesture ended or cancelled");
                 if (fraction > 0.5) {
-                    NSLog(@"completing with menu show transition");
+//                    NSLog(@"completing with menu show transition");
                     [self showMenuFromCurrentState:YES];
                 }
                 else {
-                    NSLog(@"completing with menu hide transition");
+//                    NSLog(@"completing with menu hide transition");
                     [self hideMenu];
                 }
                 break;
@@ -131,32 +131,32 @@
         }
     }
     else {
-        CGFloat fraction = -(translation.x / 200.0);
+        CGFloat fraction = 1 / (1 - (translation.x / 200.0));
         fraction = fminf(fmaxf(fraction, 0.0), 1.0);
 
         switch (sender.state) {
             case UIGestureRecognizerStateBegan:
             {
-                NSLog(@"starting gesture to hide menu");
+//                NSLog(@"starting gesture to hide menu");
                 break;
             }
             case UIGestureRecognizerStateChanged:
             {
-                NSLog(@"pan gesture translation: %f, %f", translation.x, translation.y);
-
+//                NSLog(@"pan gesture translation: %f, %f", translation.x, translation.y);
+                [self menuAnimationFraction:fraction WithActiveViewController:self.activeViewController];
                 break;
             }
             case UIGestureRecognizerStateEnded:
             case UIGestureRecognizerStateCancelled:
             {
-                NSLog(@"gesture ended or cancelled");
-                if (fraction > 0.5) {
-                    NSLog(@"completing with menu hide transition");
-
+//                NSLog(@"gesture ended or cancelled");
+                if (fraction < 0.5) {
+//                    NSLog(@"completing with menu hide transition");
+                    [self hideMenu];
                 }
                 else {
-                    NSLog(@"completing with menu show transition");
-
+//                    NSLog(@"completing with menu show transition");
+                    [self showMenuFromCurrentState:YES];
                 }
                 break;
             }
@@ -307,6 +307,9 @@
         viewController.view.transform = initialTransform;
         viewController.view.alpha = 0;
 
+        CGAffineTransform initialMenuTransform = CGAffineTransformIdentity;
+        initialMenuTransform = CGAffineTransformTranslate(initialMenuTransform, -100, 0);
+        
         // animate with keyframes
         [UIView animateKeyframesWithDuration:0.5
                                        delay:0.0
@@ -323,6 +326,7 @@
                                       [UIView addKeyframeWithRelativeStartTime:0.5
                                                               relativeDuration:0.5
                                                                     animations:^{
+                                                                        self.menuViewController.view.transform = initialMenuTransform;
                                                                         viewController.view.transform = finalTransform;
                                                                     }];
                                   } completion:^(BOOL finished) {

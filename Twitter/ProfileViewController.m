@@ -286,7 +286,7 @@ ComposeViewControllerDelegate>
     }
     
     CGFloat offset = scrollView.contentOffset.y;
-    NSLog(@"offset y: %f", offset);
+//    NSLog(@"offset y: %f", offset);
     
 //    CGPoint detailsViewOriginInWindow = [self.view convertPoint:self.detailsView.frame.origin toView:nil];
     
