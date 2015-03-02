@@ -433,6 +433,11 @@ ComposeViewControllerDelegate>
 
 - (void)profileImageTappedFromTimelineTweetCell:(TimelineTweetCell *)timelineTweetCell {
     
+    if ([timelineTweetCell.tweet.user.userID isEqualToNumber:self.user.userID]){
+        NSLog(@"tapping current user, returning.");
+        return;
+    }
+    
     ProfileViewController *profileViewController = [[ProfileViewController alloc] init];
     
     if (timelineTweetCell.tweet.retweetedTweet) {
@@ -672,7 +677,6 @@ ComposeViewControllerDelegate>
     }];
 
     NSURLRequest *imageRequestBanner = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:self.user.profileBannerUrlMedium]];
-    NSLog(@"getting image url:%@", self.user.profileBannerUrlMedium);
     [self.headerImageView setImageWithURLRequest:imageRequestBanner placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
         [UIView transitionWithView:self.headerImageView
                           duration:0.3

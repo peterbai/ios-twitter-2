@@ -62,11 +62,8 @@
     self.activeViewController = self.tweetsNavigationViewController;
 //    [self displayViewController:self.profileNavigationViewController];
     
-    NSLog(@"active vc on load: %@", self.activeViewController);
     self.panGestureRecognizer.delegate = self;
     self.menuDisplayed = NO;
-    
-    NSLog(@"tweets: %@, mentions: %@", self.tweetsNavigationViewController, self.mentionsTweetsNavigationViewController);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -89,6 +86,7 @@
 
 - (IBAction)onPanGesture:(UIPanGestureRecognizer *)sender {
     CGPoint translation = [sender translationInView:sender.view];
+    CGPoint velocity = [sender velocityInView:sender.view];
     CGFloat fraction = (translation.x / 200.0);
     fraction = fminf(fmaxf(fraction, 0.0), 1.0);
 
@@ -116,7 +114,7 @@
             case UIGestureRecognizerStateCancelled:
             {
 //                NSLog(@"gesture ended or cancelled");
-                if (fraction > 0.5) {
+                if (fraction > 0.5 || velocity.x > 200) {
 //                    NSLog(@"completing with menu show transition");
                     [self showMenuFromCurrentState:YES];
                 }
@@ -150,7 +148,7 @@
             case UIGestureRecognizerStateCancelled:
             {
 //                NSLog(@"gesture ended or cancelled");
-                if (fraction < 0.5) {
+                if (fraction < 0.5 || velocity.x < 200) {
 //                    NSLog(@"completing with menu hide transition");
                     [self hideMenu];
                 }
@@ -242,7 +240,7 @@
 
 - (void)menuAnimationFraction:(CGFloat)fraction WithActiveViewController:(UIViewController *)activeViewController {
 
-    NSLog(@"Fraction: %f", fraction);
+//    NSLog(@"Fraction: %f", fraction);
     // create intermediate transforms
     CGFloat intermediateViewTranslateX = fraction * (self.view.bounds.size.width / 2.0 + self.view.bounds.size.width / 16);
     CGFloat intermediateViewScale = fraction * 0.5 + (1 - fraction) * 1.0;
@@ -270,8 +268,8 @@
 
 - (void)goToViewController:(UIViewController *)viewController {
     
-    NSLog(@"going to vc: %@ from active vc: %@", viewController, self.activeViewController);
-    NSLog(@"from and to are equal? %d", (viewController == self.activeViewController));
+//    NSLog(@"going to vc: %@ from active vc: %@", viewController, self.activeViewController);
+//    NSLog(@"from and to are equal? %d", (viewController == self.activeViewController));
 
     // Going to same view controller - just expand the existing intermediate view
     if (!viewController || viewController == self.activeViewController) {
