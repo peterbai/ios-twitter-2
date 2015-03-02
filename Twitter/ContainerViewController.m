@@ -47,7 +47,7 @@
     self.tweetsViewController = [[TweetsViewController alloc] init];
     self.tweetsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.tweetsViewController];
     self.tweetsViewController.delegate = self;
-    self.tweetsViewController.timelineType = TimelineTypeUser;
+    self.tweetsViewController.timelineType = TimelineTypeHome;
     
     self.mentionsTweetsViewController = [[TweetsViewController alloc] init];
     self.mentionsTweetsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.mentionsTweetsViewController];
@@ -65,8 +65,8 @@
     self.accountsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:self.accountsViewController];
     
     [self displayViewController:self.menuViewController];
-//    [self displayViewController:self.tweetsNavigationViewController];
-    [self displayViewController:self.accountsNavigationViewController];
+    [self displayViewController:self.tweetsNavigationViewController];
+//    [self displayViewController:self.accountsNavigationViewController];
     
     self.panGestureRecognizer.delegate = self;
     self.menuDisplayed = NO;

@@ -32,6 +32,8 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"AccountCell" bundle:nil] forCellReuseIdentifier:@"AccountCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"AccountAddCell" bundle:nil] forCellReuseIdentifier:@"AccountAddCell"];
     
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
     // set up nav bar
         UIBarButtonItem *menuButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"hamburgerMenuButton"] style:UIBarButtonItemStylePlain target:self action:@selector(onMenu)];
         [menuButtonItem setTitleTextAttributes:

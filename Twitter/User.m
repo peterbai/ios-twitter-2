@@ -58,6 +58,18 @@ NSString * const UserDidLogoutNotification = @"UserDidLogoutNotification";
     return _currentUser;
 }
 
++ (NSArray *)allUsers {
+    NSMutableArray *mutableArray = [NSMutableArray array];
+    [mutableArray addObject:[User currentUser]];
+    
+    NSArray *array = [NSArray arrayWithArray:mutableArray];
+    return array;
+}
+
++ (void)addUser:(User *)user {
+    
+}
+
 + (void)setcurrentUser:(User *)currentUser {
     _currentUser = currentUser;
     

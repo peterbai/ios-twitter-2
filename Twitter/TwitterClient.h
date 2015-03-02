@@ -11,6 +11,8 @@
 
 @interface TwitterClient : BDBOAuth1RequestOperationManager
 
+@property (strong, nonatomic) NSArray *accounts;
+
 + (TwitterClient *)sharedInstance;
 
 - (void)loginWithCompletion:(void (^)(User *user, NSError *error))completion;

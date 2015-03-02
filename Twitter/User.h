@@ -29,7 +29,11 @@ extern NSString * const UserDidLogoutNotification;
 - (id)initWithDictionary:(NSDictionary *)dictionary;
 
 + (User *)currentUser;
++ (NSArray *)allUsers;
+
 + (void)setcurrentUser:(User *)currentUser;
+
++ (void)addUser:(User *)user;
 
 + (void)logout;
 

@@ -32,19 +32,19 @@
     // Configure the view for the selected state
 }
 
-- (void)setHighlighted:(BOOL)highlighted {
-    
-    NSLog(@"highlighting!");
-    if (highlighted) {
-        [UIView animateWithDuration:0.3 animations:^{
-            self.headerImageView.alpha = 0.5;
-        }];
-    } else {
-        [UIView animateWithDuration:0.3 animations:^{
-            self.headerImageView.alpha = 1.0;
-        }];
-    }
-}
+//- (void)setHighlighted:(BOOL)highlighted {
+//    
+//    NSLog(@"highlighting!");
+//    if (highlighted) {
+//        [UIView animateWithDuration:0.3 animations:^{
+//            self.headerImageView.alpha = 0.5;
+//        }];
+//    } else {
+//        [UIView animateWithDuration:0.3 animations:^{
+//            self.headerImageView.alpha = 1.0;
+//        }];
+//    }
+//}
 
 
 - (void)layoutSubviews {
