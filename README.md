@@ -32,7 +32,7 @@ Time spent: `22 hours`
 
 ### Walkthrough
 
-![Video Walkthrough](./gif/walkthrough-t2-03.gif)
+![Video Walkthrough](./gif/walkthrough-t2-04.gif)
 
 Credits
 ---------
