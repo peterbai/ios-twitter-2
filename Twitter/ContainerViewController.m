@@ -98,13 +98,17 @@
             case UIGestureRecognizerStateBegan:
             {
                 NSLog(@"starting gesture to show menu");
+                // set up menu transform states
+                CGAffineTransform initialMenuTransform = CGAffineTransformIdentity;
+                initialMenuTransform = CGAffineTransformTranslate(initialMenuTransform, -100, 0);
 
+                // set initial state
+                self.menuViewController.view.transform = initialMenuTransform;
                 break;
             }
             case UIGestureRecognizerStateChanged:
             {
                 NSLog(@"pan gesture translation: %f, %f", translation.x, translation.y);
-
                 [self menuAnimationFraction:fraction WithActiveViewController:self.activeViewController];
                 break;
             }
@@ -114,11 +118,11 @@
                 NSLog(@"gesture ended or cancelled");
                 if (fraction > 0.5) {
                     NSLog(@"completing with menu show transition");
-
+                    [self showMenuFromCurrentState:YES];
                 }
                 else {
                     NSLog(@"completing with menu hide transition");
-
+                    [self hideMenu];
                 }
                 break;
             }
@@ -203,7 +207,12 @@
 
 #pragma mark Private methods
 
+
 - (void)showMenu {
+    [self showMenuFromCurrentState:NO];
+}
+
+- (void)showMenuFromCurrentState:(BOOL)fromCurrentState {
     // set up active viewcontroller transform states
     CGAffineTransform initialTransform = CGAffineTransformIdentity;
     CGAffineTransform finalTransform = CGAffineTransformTranslate(initialTransform, self.view.bounds.size.width / 2.0 + self.view.bounds.size.width / 16 , 0);
@@ -213,9 +222,11 @@
     CGAffineTransform initialMenuTransform = CGAffineTransformIdentity;
     initialMenuTransform = CGAffineTransformTranslate(initialMenuTransform, -100, 0);
     CGAffineTransform finalMenuTransform = CGAffineTransformIdentity;
-    
-    // set initial state
-    self.menuViewController.view.transform = initialMenuTransform;
+
+    if (!fromCurrentState) {
+        // set initial state
+        self.menuViewController.view.transform = initialMenuTransform;
+    }
     
     // animate to final state
     [UIView animateWithDuration:0.3
@@ -265,11 +276,17 @@
     // Going to same view controller - just expand the existing intermediate view
     if (!viewController || viewController == self.activeViewController) {
         NSLog(@"going back to currently active vc");
+        
+        // set up menu transform states
+        CGAffineTransform initialMenuTransform = CGAffineTransformIdentity;
+        initialMenuTransform = CGAffineTransformTranslate(initialMenuTransform, -100, 0);
+        
         [UIView animateWithDuration:0.3
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              self.activeViewController.view.transform = CGAffineTransformIdentity;
+                             self.menuViewController.view.transform = initialMenuTransform;
                          } completion:^(BOOL finished) {
                              self.menuDisplayed = NO;
                          }];
